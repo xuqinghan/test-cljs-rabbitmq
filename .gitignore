@@ -1,5 +1,5 @@
 node_modules/
-public/js
+frontend-cljs/public/js/
 
 /target
 /checkouts
@@ -22,3 +22,5 @@ pom.xml.asc
 .clj-kondo/
 .lsp/
 .cache/
+.calva/
+__pycache__/

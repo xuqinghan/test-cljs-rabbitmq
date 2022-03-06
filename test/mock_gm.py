@@ -17,7 +17,7 @@ game-prepare阶段的调度！
 
 '''
 import sys
-sys.append('..')
+sys.path.append('..')
 import pika
 from configure_rabbitmq import para_connection
 import time
@@ -31,12 +31,14 @@ channel = connection.channel()
 #当前推演是否进行中
 states = {'0': '进行中'}
 
-#玩家请求初始化1场退役
-queue_prepare_game = channel.queue_declare(queue='', exclusive=True)
-queue_name = queue_prepare_game.method.queue
-channel.queue_bind(exchange='player-request', 
-                    queue=queue_name,
-                    routing_key='prepare_game')
+#玩家请求初始化1场退
+#queue_prepare_game = channel.queue_declare(queue='', exclusive=True)
+#queue_name = queue_prepare_game.method.queue
+# channel.queue_bind(exchange='player-request', 
+#                     queue=queue_name,
+#                     routing_key='prepare_game')
+#    channel.queue_bind(exchange='player-request', queue='player-compile-command')
+queue_prepare_game = 'player-compile-command'
 
 def on_player_prepare_game(ch, method, properties, body):
     '''一个gid的1个玩家要求初始化1个gid'''
@@ -45,7 +47,7 @@ def on_player_prepare_game(ch, method, properties, body):
     # 形如 {'gid': '0', 'role': '1', 'routing_key': 'gid-0-role-1'}
     gid = msg['gid']
     print('gid', gid)
-    routing_key = msg['routing_key']
+    #routing_key = msg['routing_key']
     #print(" [x] Done")
     ch.basic_ack(delivery_tag = method.delivery_tag)
     #1 如果推演进行中，则通知war-runtime，初始化1个gid（是否已经初始化不管了)
@@ -56,5 +58,7 @@ def on_player_prepare_game(ch, method, properties, body):
     #ch.basic_publish(exchange='', routing_key='init_snapshot_player', body=body)
 
 
-
+print('gm connected')
 channel.basic_consume(queue=queue_prepare_game, on_message_callback=on_player_prepare_game)
+while True:
+    pass

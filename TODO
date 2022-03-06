@@ -1,5 +1,6 @@
 ✔ docker rabbitmq @done(22-03-05 14:17)
 ✔ 配置exchange queue @done(22-03-05 14:17)
+✔ cljs hello world @done(22-03-06 17:46)
 ☐ RabbitMQ stomp 插件部署
 ☐ cljs + stomp 测试
 ☐ RabbitMQ stream 插件部署

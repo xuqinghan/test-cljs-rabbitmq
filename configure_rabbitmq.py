@@ -14,6 +14,10 @@ para_connection = pika.ConnectionParameters(
                         #heartbeat_interval=600,
                         blocked_connection_timeout=10000)
 
+#def remove():
+    #channel.queue_delete(queue='hello')
+
+
 def define():
     '''配置rabbitmq'''
     connection = pika.BlockingConnection(
@@ -25,12 +29,12 @@ def define():
     #-------------前端输出-------------
     #玩家独有的请求,如上线online
     channel.exchange_declare(exchange='player-request',
-                            exchange_type='direct')
+                            exchange_type='fanout')
 
     #--------后端裁决结果输出---------------
     # 前后端重建都需要重建env
     channel.exchange_declare(exchange='war-snapshot',
-                         exchange_type='direct')
+                            exchange_type='direct')
 
 
     #--------------定义queue 订阅方--------------------
