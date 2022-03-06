@@ -1,29 +1,33 @@
 
-version: '3.7'
+version: '3.8'
 
 services:
   rabbitmq-webstomp:
     restart: always
-    image: rabbitmq:3-management
+    image: rabbitmq-webstomp
+    build: ./ #需要安装plugin
+    command: rabbitmq-server
     environment:
       RABBITMQ_ERLANG_COOKIE: SWQOKODSQALRPCLNMEQG
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
-        # RABBITMQ_DEFAULT_VHOST: "/"
-        # RABBITMQ_NODENAME: taiga
+      # RABBITMQ_DEFAULT_VHOST: "/"
+      # RABBITMQ_NODENAME: taiga
     ports:
       - "15672:15672" #管理页面
-      - "5672:5672" #不开放端口 外部主机无法连接
-    networks:
-      cljs-rabbitmq:
-        ipv4_address: '171.19.0.102'
-    deploy:
-      mode: global
+      - "5672:5672" #rabbitmq端口
+      - "15674:15674" #web stomp 端口
+      - "61613:61613" #stomp 端口
+    # networks:
+    #   cljs-rabbitmq:
+    #     ipv4_address: '171.19.0.102'
+    # deploy:
+    #   mode: global
 
-networks:
-  cljs-rabbitmq:
-    ipam:
-      driver: default
-      config:
-        - subnet: 171.19.0.0/16
+# networks:
+#   cljs-rabbitmq:
+#     ipam:
+#       driver: default
+#       config:
+#         - subnet: 171.19.0.0/16
 
