@@ -1,0 +1,4 @@
+✔ docker rabbitmq @done(22-03-05 14:17)
+✔ 配置exchange queue @done(22-03-05 14:17)
+☐ RabbitMQ stomp 后端
+☐ cljs + stomp
