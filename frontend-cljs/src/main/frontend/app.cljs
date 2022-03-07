@@ -1,24 +1,46 @@
 (ns frontend.app
   (:require
-   [frontend.util :refer (console-log)]
+   [frontend.util :refer (console-log to-json parse-json)]
    [stomp]
+   [config :refer [para_stomp]]
+   [goog.string :refer (format)]
    )
   )
 
-(def client-stomp (new stomp/Client {"brokerURL" "ws://127.0.0.1:15674/ws"
-                                     "connectHeaders" {"login" "guest"
-                                                      "passcode" "guest"}
-                                     "reconnectDelay" 5000
-                                     "heartbeatIncoming" 4000
-                                     "heartbeatOutgoing" 4000}))
 
+
+
+(def ^stomp/Client client-stomp) ;增加类型注解
 
 
 
 (defn init []
   (console-log "Hello World")
-  (aset client-stomp "onConnect" (fn [frame] (console-log "stomp connected")))
+  (console-log para_stomp)
+  (set! client-stomp (new stomp/Client para_stomp))
   (console-log client-stomp)
-  (console-log client-stomp)
-  (.activate client-stomp [])
-  )
+
+
+  (aset client-stomp "onConnect"
+    (fn [frame]
+      (console-log "stomp connected")
+
+      ; 登录后 订阅队列
+      (.subscribe client-stomp "/queue/snapshot"
+        (fn [msg]
+          (console-log "recv from /queue/snapshot" msg)
+          (println (parse-json msg.body))
+        ))
+
+          ;发送消息到rabitmq
+      (let [body (to-json {:para1 1 :para2 2})
+            para {:destination "/exchange/player-request"
+                      ;; :headers {:transaction 312}
+                  :body body}
+            para-js-obj (clj->js para)]
+        (.publish client-stomp para-js-obj))
+      ))
+
+
+  ;; 启动客户端
+  (.activate client-stomp))

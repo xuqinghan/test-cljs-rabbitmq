@@ -1,20 +1,5 @@
 '''
-game-prepare阶段的调度！
-
-接受前端加载1场gid的请求  发起prepare game:
-如果有前端要求的特定初始化交互步骤，在这里负责！
-
-所有图层列表
-
-
-1 根据每场推演的元数据，通知db，初始化1个阵营的前端（gid-role）：
-    1 发送snapshot(scenario)
-    (发送完snapshot，前端自己决定开始对时，完成wg-logs下载)
-
-2 根据gid是否"进行中"，通知war-runtime加载1场"进行中"的推演(gid).
-    1 发送snapshot(scenario)
-    2 发送logs
-
+基本假设gm永远在线,客户端频繁上下线
 '''
 import sys
 sys.path.append('..')
@@ -38,27 +23,27 @@ states = {'0': '进行中'}
 #                     queue=queue_name,
 #                     routing_key='prepare_game')
 #    channel.queue_bind(exchange='player-request', queue='player-compile-command')
-queue_prepare_game = 'player-compile-command'
+queue_name = 'player-compile-command'
 
 def on_player_prepare_game(ch, method, properties, body):
     '''一个gid的1个玩家要求初始化1个gid'''
     msg = json.loads(body)
     print(" [x] Received on_player_prepare_game %r" % msg)
     # 形如 {'gid': '0', 'role': '1', 'routing_key': 'gid-0-role-1'}
-    gid = msg['gid']
-    print('gid', gid)
+    #gid = msg['gid']
+    #print('gid', gid)
     #routing_key = msg['routing_key']
     #print(" [x] Done")
     ch.basic_ack(delivery_tag = method.delivery_tag)
     #1 如果推演进行中，则通知war-runtime，初始化1个gid（是否已经初始化不管了)
     # if states['gid'] == '进行中':
-    #     ch.basic_publish(exchange='war-runtime-prepare', routing_key=gid, body=json.dumps({'gid': gid}))
+    gid = '111'
+    ch.basic_publish(exchange='war-snapshot', routing_key=gid, body=json.dumps({'gid': gid}))
 
     #2 通知db，初始化1个阵营的前端（gid-role） 如果有前端要求的特定初始化交互步骤，在这里负责！
     #ch.basic_publish(exchange='', routing_key='init_snapshot_player', body=body)
 
 
 print('gm connected')
-channel.basic_consume(queue=queue_prepare_game, on_message_callback=on_player_prepare_game)
-while True:
-    pass
+channel.basic_consume(queue=queue_name, on_message_callback=on_player_prepare_game)
+channel.start_consuming()

@@ -34,7 +34,7 @@ def define():
     #--------后端裁决结果输出---------------
     # 前后端重建都需要重建env
     channel.exchange_declare(exchange='war-snapshot',
-                            exchange_type='direct')
+                            exchange_type='fanout')
 
 
     #--------------定义queue 订阅方--------------------

@@ -3,6 +3,6 @@
 ✔ cljs hello world @done(22-03-06 17:46)
 ✔ RabbitMQ stomp 插件部署 @done(22-03-06 20:03)
 ✔ cljs require js stomp @done(22-03-06 20:03)
-☐ cljs + stomp 测试
+✔ cljs + stomp 上线 @done(22-03-07 14:06)
 ☐ RabbitMQ stream 插件部署
 ☐ cljs + stream 测试

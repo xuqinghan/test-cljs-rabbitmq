@@ -15,6 +15,9 @@
              }
   :js-options
    {:resolve {"stomp" {:target :file
-                      :file "src/js/frontend/stomp.umd.min.js"}}
-    }
+                       :file "src/js/assets/stomp.umd.min.js"}
+              "config" {:target :file
+                        :file "src/js/config.js"}
+              }
    }}}
+ }
