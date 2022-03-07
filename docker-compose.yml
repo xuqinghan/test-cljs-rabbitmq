@@ -18,6 +18,7 @@ services:
       - "5672:5672" #rabbitmq端口
       - "15674:15674" #web stomp 端口
       - "61613:61613" #stomp 端口
+      - "5552:5552" # stream 端口
     # networks:
     #   cljs-rabbitmq:
     #     ipv4_address: '171.19.0.102'
