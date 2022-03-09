@@ -2,23 +2,25 @@
 version: '3.8'
 
 services:
-  rabbitmq-webstomp:
+  rabbitmq-stream:
     restart: always
-    image: rabbitmq-webstomp
-    build: ./ #需要安装plugin
+    #image: rabbitmq-webstomp
+    build: ./ 
     command: rabbitmq-server
     environment:
       RABBITMQ_ERLANG_COOKIE: SWQOKODSQALRPCLNMEQG
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: -rabbitmq_stream advertised_host localhost
       # RABBITMQ_DEFAULT_VHOST: "/"
       # RABBITMQ_NODENAME: taiga
     ports:
-      - "15672:15672" #管理页面
-      - "5672:5672" #rabbitmq端口
-      - "15674:15674" #web stomp 端口
-      - "61613:61613" #stomp 端口
-      - "5552:5552" # stream 端口
+      - "15672:15672" # mangerment webpage
+      - "5672:5672" #rabbitmq
+      - "15674:15674" #web stomp
+      - "61613:61613" #stomp
+      - "5552:5552" # stream
+      #- "12345:12345" #stream.advertised_port
     # networks:
     #   cljs-rabbitmq:
     #     ipv4_address: '171.19.0.102'
