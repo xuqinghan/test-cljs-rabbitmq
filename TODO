@@ -7,7 +7,7 @@ stomp:
     ✔ cljs + stomp 上线 @done(22-03-07 14:06)
 stream:
     ✔ RabbitMQ stream 插件部署 @done(22-03-07 16:55)
-    ☐  python stream rstream 客户端 测试
+    ✔  python stream rstream 客户端 测试 @done(22-03-09 16:21)
     ☐  clojure stream java 客户端 测试 
     ☐  js amqp-client.js 客户端 测试
     ☐  cljs amqp-client stream 客户端测试
