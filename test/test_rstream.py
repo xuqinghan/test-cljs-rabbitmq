@@ -13,6 +13,7 @@ async def publish():
             amqp_message = AMQPMessage(
                 body='hello: {}'.format(i),
             )
+            #print(amqp_message.publishing_id)
             #msg = f'hello: {i}'
             await producer.publish('mystream', amqp_message)
 
