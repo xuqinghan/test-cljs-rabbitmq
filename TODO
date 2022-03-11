@@ -7,7 +7,9 @@ stomp:
     ✔ cljs + stomp 上线 @done(22-03-07 14:06)
 stream:
     ✔ RabbitMQ stream 插件部署 @done(22-03-07 16:55)
-    ✔  python stream rstream 客户端 测试 @done(22-03-09 16:21)
+    ✔  python stream rstream 客户端 测试 AMQP 1.0, 不支持stompjs接收 @done(22-03-09 16:21)
+    ✔ python pika 创建 发布 stream 消息 @done(22-03-11 16:07)
+    ☐ python pika 接收stream queue的消息
     ☐  clojure stream java 客户端 测试 
     ☐  js amqp-client.js 客户端 测试
     ☐  cljs amqp-client stream 客户端测试
