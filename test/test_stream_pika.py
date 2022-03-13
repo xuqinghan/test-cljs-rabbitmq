@@ -45,24 +45,28 @@ def publish(channel):
         msg = f'hello: {i}'
         channel.basic_publish('stream_ex', routing_key='mystream_pika', body=msg)
 
-# def recv(channel):
-#     def on_player_prepare_game(ch, method, properties, body):
-#         print(f" [x] Received from stream {body}")
-#         ch.basic_ack(delivery_tag = method.delivery_tag)
+def recv(channel):
+    def fn_callback(ch, method, properties, body):
+        print(f" [x] Received from stream")
+        ch.basic_ack(delivery_tag = method.delivery_tag, multiple=False)
 
-#     channel.basic_qos(prefetch_count=10)
-#     channel.basic_consume(queue='mystream_pika', 
-#                             on_message_callback=on_player_prepare_game,
-#                             auto_ack = False,
-#                             exclusive= False,
-#                             arguments = {
-#                                 "x-stream-offset": "first",
-#                                 'durable': True,
-#                                 'auto-delete': False,
-#                                 'x-queue-type': 'stream',
-#                                 }
-#                             )
-#     channel.start_consuming()
+    channel.basic_qos(prefetch_count=10)
+    channel.basic_consume(queue='mystream_pika', 
+                            on_message_callback=fn_callback,
+                            auto_ack = False,
+                            exclusive= False,
+                            arguments = {
+                                "x-stream-offset": "first",
+                                'durable': True,
+                                'auto-delete': False,
+                                'x-queue-type': 'stream',
+                                'prefetch-count': 10,
+                                }
+                            )
+
+    channel.start_consuming()
+
+
 
 
 
@@ -74,7 +78,7 @@ if __name__ == '__main__':
 
     channel = connection.channel()
 
-    define(channel)
-    publish(channel)
-    #recv(channel)
+    #define(channel)
+    #publish(channel)
+    recv(channel)
     connection.close()
