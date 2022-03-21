@@ -5,12 +5,13 @@
 
 (def factory (new ConnectionFactory))
 (def conn false)
-(def ^Channel ch)
+(def ^:dynamic ^Channel *ch*)
 
 
 (defn fn_callback_msg [consumerTag, message]
   (println (new String (.getBody message)))
-  (.basicAck ch (.. message getEnvelope getDeliveryTag) false))
+  ;; (.basicAck *ch* (.. message getEnvelope getDeliveryTag) false)
+  )
 
 (defn make-fn_callback_msg []
   ;"impl DeliverCallback.handle https://rabbitmq.github.io/rabbitmq-java-client/api/current/com/rabbitmq/client/DeliverCallback.html"
@@ -30,7 +31,6 @@
       (fn_consumerOK consumerTag))))
 
 
-(set! conn (.newConnection factory))
 
 
 
@@ -38,15 +38,17 @@
   "I don't do a whole lot ... yet."
   [& args]
   (println "Hello, World!")
+  (let [conn (.newConnection factory)]
+    (binding [*ch* (.createChannel conn)]
 
-  ;; (binding [*ch* (.createChannel conn)]
-  ;;   (.basicQos *ch* 100)
-  ;;   (.basicConsume *ch*
-  ;;                  "mystream_pika"
-  ;;                  false
-  ;;                  (Collections/singletonMap "x-stream-offset" "first")
-  ;;                  (make-fn_callback_msg)
-  ;;                  (make-fn_consumerOK)))
+      (.basicQos *ch* 100)
+      (.basicConsume *ch*
+                     "mystream_pika"
+                     false
+                     (Collections/singletonMap "x-stream-offset" "first")
+                     (make-fn_callback_msg)
+                     (make-fn_consumerOK))))
+
   (println "exit"))
 
 
