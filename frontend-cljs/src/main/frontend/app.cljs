@@ -2,7 +2,7 @@
   (:require
    [frontend.util :refer (console-log to-json parse-json)]
    [stomp]
-   [config :refer [para_stomp]]
+   [config :refer [para_stomp para_stream]]
    [goog.string :refer (format)]
    )
   )
@@ -25,20 +25,24 @@
     (fn [frame]
       (console-log "stomp connected")
 
-      ; 登录后 订阅队列
-      (.subscribe client-stomp  "/queue/snapshot"
-        (fn [msg]
-          (console-log "recv from /queue/snapshot" msg)
-          (println (parse-json msg.body))
-        ))
+      ; 登录后 订阅stream
+      (.subscribe client-stomp  
+                  "/amq/queue/mystream_pika"
+                  (fn [msg]
+                    (console-log "recv from mystream_pika" msg.body)
+                    ;; (println (parse-json msg.body))
+                    (.ack msg)
+                    )
+                  para_stream
+                  )
 
           ;发送消息到rabitmq
-      (let [body (to-json {:para1 1 :para2 2})
-            para {:destination "/exchange/player-request"
-                      ;; :headers {:transaction 312}
-                  :body body}
-            para-js-obj (clj->js para)]
-        (.publish client-stomp  para-js-obj))
+      ;; (let [body (to-json {:para1 1 :para2 2})
+      ;;       para {:destination "/exchange/player-request"
+      ;;                 ;; :headers {:transaction 312}
+      ;;             :body body}
+      ;;       para-js-obj (clj->js para)]
+      ;;   (.publish client-stomp  para-js-obj))
       ))
 
 

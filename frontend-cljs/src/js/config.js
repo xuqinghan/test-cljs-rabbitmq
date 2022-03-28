@@ -13,3 +13,12 @@ export const para_stomp = {
     heartbeatIncoming: 4000,
     heartbeatOutgoing: 4000,
 }
+
+export const para_stream = {
+    'ack': 'client-individual',
+    'durable': true,
+    'auto-delete': false,
+    'x-queue-type': 'stream',
+    'prefetch-count': 10,
+    'x-stream-offset': 'first'
+}
