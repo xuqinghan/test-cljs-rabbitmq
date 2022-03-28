@@ -48,6 +48,12 @@
                      (Collections/singletonMap "x-stream-offset" "first")
                      (make-fn_callback_msg)
                      (make-fn_consumerOK))))
+  ;keep not exit
+  ;; (println "wait 1sec")
+  ;; (while true
+  ;;   (Thread/sleep 1)
+  ;;   (println "wait 1sec")
+  ;;   (flush))
 
   (println "exit"))
 

@@ -47,10 +47,10 @@ def publish(channel):
 
 def recv(channel):
     def fn_callback(ch, method, properties, body):
-        print(f" [x] Received from stream")
+        print(f" [x] Received from stream, {body.decode('utf-8')}")
         ch.basic_ack(delivery_tag = method.delivery_tag, multiple=False)
 
-    channel.basic_qos(prefetch_count=10)
+    channel.basic_qos(prefetch_count=100)
     channel.basic_consume(queue='mystream_pika', 
                             on_message_callback=fn_callback,
                             auto_ack = False,
@@ -60,14 +60,18 @@ def recv(channel):
                                 'durable': True,
                                 'auto-delete': False,
                                 'x-queue-type': 'stream',
-                                'prefetch-count': 10,
+                                'prefetch-count': 100,
                                 }
                             )
 
     channel.start_consuming()
 
 
-
+def test_publish1(channel):
+    '''发出1条,测试能否接收'''
+    i = 101
+    msg = f'record: {i}'
+    channel.basic_publish('stream_ex', routing_key='mystream_pika', body=msg)
 
 
 
@@ -81,4 +85,5 @@ if __name__ == '__main__':
     #define(channel)
     #publish(channel)
     recv(channel)
+    #test_publish1(channel)
     connection.close()
