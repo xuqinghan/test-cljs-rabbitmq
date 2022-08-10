@@ -10,9 +10,11 @@ host = 'localhost'
 #host = '192.168.0.181'
 
 para_connection = pika.ConnectionParameters(
-                        host=host,
+                        host=host
+                        ,heartbeat=5)
                         #heartbeat_interval=600,
-                        blocked_connection_timeout=10000)
+                        #blocked_connection_timeout=10000)
+                       
 
 #def remove():
     #channel.queue_delete(queue='hello')
@@ -20,8 +22,7 @@ para_connection = pika.ConnectionParameters(
 
 def define():
     '''配置rabbitmq'''
-    connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host=host))
+    connection = pika.BlockingConnection(para_connection)
 
     channel = connection.channel()
 
